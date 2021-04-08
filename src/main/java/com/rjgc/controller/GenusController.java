@@ -4,6 +4,7 @@ import com.rjgc.dao.Family;
 import com.rjgc.dao.Genus;
 import com.rjgc.service.FamilyService;
 import com.rjgc.service.GenusService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class GenusController {
      * @return 结果list
      */
     @GetMapping("all")
+    @ApiOperation("查询所有属")
     public List<Genus> selectAllGenus(@RequestParam int pageNum, @RequestParam int pageSize) {
         return genusService.selectAllGenuses(pageNum, pageSize);
     }
@@ -43,6 +45,7 @@ public class GenusController {
      * @return 结果
      */
     @GetMapping
+    @ApiOperation("根据id查询")
     public List<Genus> selectGenusById(@RequestParam int id) {
         return genusService.selectGenusesById(id);
     }
@@ -53,6 +56,7 @@ public class GenusController {
      * @return int
      */
     @PostMapping("{familyId}")
+    @ApiOperation("插入属")
     public int insertGenus(@PathVariable int familyId, @RequestBody Genus genus) {
         //检查属id是否有效
         List<Family> families = familyService.selectFamiliesById(familyId);
@@ -69,6 +73,7 @@ public class GenusController {
      * @return int
      */
     @DeleteMapping
+    @ApiOperation("删除属")
     public int deleteGenusById(@RequestParam int id) {
         return genusService.deleteGenusById(id);
     }
@@ -79,6 +84,7 @@ public class GenusController {
      * @return int
      */
     @PutMapping
+    @ApiOperation("更新属")
     public int updateGenus(@RequestBody Genus newGenus) {
         return genusService.updateGenus(newGenus);
     }

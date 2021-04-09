@@ -1,6 +1,7 @@
 package com.rjgc.configs;
 
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -18,9 +19,14 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
+    @Autowired
+    private SwaggerProperties swaggerProperties;
+
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .enable(swaggerProperties.getEnable())
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
@@ -29,10 +35,10 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo(){
         return new ApiInfoBuilder()
-                .title("林业害虫识别后台管理系统")
-                .description("没什么可说的233")
+                .title(swaggerProperties.getApplicationName())
+                .description(swaggerProperties.getApplicationDescription())
                 .contact(new Contact("赵云杰", "https://www.example.com", "xuanxusb@outlook.com"))
-                .version("1.0")
+                .version(swaggerProperties.getApplicationVersion())
                 .build();
     }
 }

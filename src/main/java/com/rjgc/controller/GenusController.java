@@ -1,7 +1,10 @@
 package com.rjgc.controller;
 
-import com.rjgc.dao.Family;
-import com.rjgc.dao.Genus;
+import com.rjgc.entity.Family;
+import com.rjgc.entity.Genus;
+import com.rjgc.exceptions.BizException;
+import com.rjgc.exceptions.ExceptionsEnum;
+import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.FamilyService;
 import com.rjgc.service.GenusService;
 import io.swagger.annotations.ApiOperation;
@@ -29,63 +32,80 @@ public class GenusController {
 
     /**
      * 查询所有属
-     * @param pageNum 当前页
+     *
+     * @param pageNum  当前页
      * @param pageSize 需要查询的页数
      * @return 结果list
      */
     @GetMapping("all")
     @ApiOperation("查询所有属")
-    public List<Genus> selectAllGenus(@RequestParam int pageNum, @RequestParam int pageSize) {
-        return genusService.selectAllGenuses(pageNum, pageSize);
+    public ResBody<List<Genus>> selectAllGenus(@RequestParam int pageNum, @RequestParam int pageSize) {
+        return ResBody.success(genusService.selectAllGenuses(pageNum, pageSize));
     }
 
     /**
      * 根据id查询
+     *
      * @param id id
      * @return 结果
      */
     @GetMapping
     @ApiOperation("根据id查询")
-    public List<Genus> selectGenusById(@RequestParam int id) {
-        return genusService.selectGenusesById(id);
+    public ResBody<List<Genus>> selectGenusById(@RequestParam int id) {
+        return ResBody.success(genusService.selectGenusesById(id));
     }
 
     /**
      * 插入属
+     *
      * @param genus 属
      * @return int
      */
     @PostMapping("{familyId}")
     @ApiOperation("插入属")
-    public int insertGenus(@PathVariable int familyId, @RequestBody Genus genus) {
+    public ResBody<Integer> insertGenus(@PathVariable int familyId, @RequestBody Genus genus) {
         //检查属id是否有效
         List<Family> families = familyService.selectFamiliesById(familyId);
         if (families.isEmpty()) {
-            //todo 抛出错误
-            return 0;
+            //无效id
+            throw new BizException(ExceptionsEnum.INVALID_ID);
         }
-        return genusService.insertGenus(familyId, genus);
+        if (genusService.insertGenus(familyId, genus) == 1) {
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
     }
 
     /**
      * 删除属
+     *
      * @param id id
      * @return int
      */
     @DeleteMapping
     @ApiOperation("删除属")
-    public int deleteGenusById(@RequestParam int id) {
-        return genusService.deleteGenusById(id);
+    public ResBody<Integer> deleteGenusById(@RequestParam int id) {
+        if (genusService.deleteGenusById(id) == 1) {
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
     }
 
     /**
      * 更新属
+     *
      * @param newGenus 新属
      * @return int
      */
     @PutMapping
     @ApiOperation("更新属")
-    public int updateGenus(@RequestBody Genus newGenus) {
-        return genusService.updateGenus(newGenus);
+    public ResBody<Integer> updateGenus(@RequestBody Genus newGenus) {
+        if (genusService.updateGenus(newGenus) == 1) {
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
     }
 }

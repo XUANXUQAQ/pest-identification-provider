@@ -3,7 +3,7 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rjgc.dao.Genus;
+import com.rjgc.entity.Genus;
 import com.rjgc.mapper.GenusMapper;
 import com.rjgc.service.FamilyGenusService;
 import com.rjgc.service.GenusService;

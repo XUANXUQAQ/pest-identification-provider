@@ -1,4 +1,4 @@
-package com.rjgc.dao;
+package com.rjgc.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
@@ -11,21 +11,18 @@ import javax.persistence.Table;
 
 /**
  * @author zhaoyunjie
- * @date 2021-04-08 13:13
+ * @date 2021-04-08 16:49
  */
-@AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@AllArgsConstructor
 @Data
-@Table(name = "orders")
-public class Orders {
+@Table(name = "family_genus")
+@Entity
+public class FamilyGenus {
+
+    @JSONField(name = "family_id")
+    private int familyId;
 
     @Id
-    private int id;
-
-    @JSONField(name = "name")
-    private String name;
-
-    @JSONField(name = "code")
-    private String code;
+    private int genusId;
 }

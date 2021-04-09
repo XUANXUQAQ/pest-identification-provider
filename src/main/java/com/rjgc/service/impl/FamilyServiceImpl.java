@@ -3,11 +3,10 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rjgc.dao.Family;
+import com.rjgc.entity.Family;
 import com.rjgc.mapper.FamilyMapper;
 import com.rjgc.service.FamilyService;
 import com.rjgc.service.OrderFamilyService;
-import com.rjgc.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,10 +26,6 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     @Autowired
     @Qualifier("orderFamilyServiceImpl")
     private OrderFamilyService orderFamilyService;
-
-    @Autowired
-    @Qualifier("orderServiceImpl")
-    private OrderService orderService;
 
     @Override
     public List<Family> selectAllFamilies(int pageNum, int pageSize) {

@@ -1,7 +1,7 @@
 package com.rjgc.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.rjgc.dao.FamilyGenus;
+import com.rjgc.entity.FamilyGenus;
 
 import java.util.List;
 

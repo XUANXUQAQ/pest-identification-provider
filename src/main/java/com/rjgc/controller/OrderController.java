@@ -1,7 +1,10 @@
 package com.rjgc.controller;
 
-import com.rjgc.dao.Orders;
-import com.rjgc.dao.OrderFamily;
+import com.rjgc.entity.OrderFamily;
+import com.rjgc.entity.Orders;
+import com.rjgc.exceptions.BizException;
+import com.rjgc.exceptions.ExceptionsEnum;
+import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.OrderFamilyService;
 import com.rjgc.service.OrderService;
 import io.swagger.annotations.ApiOperation;
@@ -29,45 +32,57 @@ public class OrderController {
 
     @GetMapping("all")
     @ApiOperation("查询所有目")
-    public List<Orders> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
-        return orderService.selectAllOrders(pageNum, pageSize);
+    public ResBody<List<Orders>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
+        return ResBody.success(orderService.selectAllOrders(pageNum, pageSize));
     }
 
     @GetMapping
     @ApiOperation("根据id查询目")
-    public List<Orders> selectOrderById(@RequestParam int id) {
-        return orderService.selectOrdersById(id);
+    public ResBody<List<Orders>> selectOrderById(@RequestParam int id) {
+        return ResBody.success(orderService.selectOrdersById(id));
     }
 
     @PostMapping
     @ApiOperation("添加目")
-    public int insertOrder(@RequestBody Orders orders) {
-        return orderService.insertOrder(orders);
+    public ResBody<Integer> insertOrder(@RequestBody Orders orders) {
+        if (orderService.insertOrder(orders) == 1) {
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
     }
 
     @DeleteMapping
     @ApiOperation("根据id删除目")
-    public int deleteOrderById(@RequestParam int id) {
+    public ResBody<Integer> deleteOrderById(@RequestParam int id) {
         //检查是否仍有属关联于该目
         List<OrderFamily> orderFamilies = orderFamilyService.selectByOrderId(id);
         if (orderFamilies.isEmpty()) {
-            return orderService.deleteOrderById(id);
+            if (orderService.deleteOrderById(id) == 1) {
+                return ResBody.success();
+            } else {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
         } else {
-            //todo 抛出错误
-            return 0;
+            //id仍被使用
+            throw new BizException(ExceptionsEnum.IN_USE);
         }
     }
 
     @PutMapping
     @ApiOperation("更新目")
-    public int updateOrder(@RequestBody Orders newOrders) {
+    public ResBody<Integer> updateOrder(@RequestBody Orders newOrders) {
         //检查是否仍有属关联于该目
         List<OrderFamily> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
         if (orderFamilies.isEmpty()) {
-            return orderService.updateOrder(newOrders);
+            if (orderService.updateOrder(newOrders) == 1) {
+                return ResBody.success();
+            } else {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
         } else {
-            //todo 抛出错误
-            return 0;
+            //id仍被使用
+            throw new BizException(ExceptionsEnum.IN_USE);
         }
     }
 }

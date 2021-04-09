@@ -1,7 +1,7 @@
 package com.rjgc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.rjgc.dao.Genus;
+import com.rjgc.entity.Genus;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

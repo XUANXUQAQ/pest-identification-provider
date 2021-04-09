@@ -3,7 +3,7 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.rjgc.dao.OrderFamily;
+import com.rjgc.entity.OrderFamily;
 import com.rjgc.mapper.OrderFamilyMapper;
 import com.rjgc.service.OrderFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -21,6 +21,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetainsService userDetainsService;
 
+    @Autowired
+    private CsrfProperties csrfProperties;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //除了swagger和登录注销，其他拦截
@@ -37,6 +40,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll()
                 .anyRequest().hasRole("admin");
+        if (csrfProperties.getCsrfDisabled()) {
+            http.csrf().disable();
+        }
 
         //登录和注销功能
         http.formLogin()

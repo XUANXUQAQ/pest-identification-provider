@@ -1,7 +1,6 @@
 package com.rjgc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.OrderFamily;
 import com.rjgc.mapper.OrderFamilyMapper;
@@ -24,7 +23,7 @@ public class OrderFamilyServiceImpl extends ServiceImpl<OrderFamilyMapper, Order
     @Override
     public List<OrderFamily> selectByOrderId(int orderId) {
         QueryWrapper<OrderFamily> wrapper = new QueryWrapper<>();
-        return this.page(new Page<>(0, 1), wrapper).getRecords();
+        return orderFamilyMapper.selectList(wrapper);
     }
 
     @Override

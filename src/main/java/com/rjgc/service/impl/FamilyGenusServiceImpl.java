@@ -1,7 +1,6 @@
 package com.rjgc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.FamilyGenus;
 import com.rjgc.mapper.FamilyGenusMapper;
@@ -25,7 +24,7 @@ public class FamilyGenusServiceImpl extends ServiceImpl<FamilyGenusMapper, Famil
     public List<FamilyGenus> selectByFamilyId(int familyId) {
         QueryWrapper<FamilyGenus> wrapper = new QueryWrapper<>();
         wrapper.eq("family_id", familyId);
-        return this.page(new Page<>(0, 1), wrapper).getRecords();
+        return familyGenusMapper.selectList(wrapper);
     }
 
     @Override

@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 /**
  * @author zhaoyunjie
  * @date 2021-04-09 10:30
@@ -23,31 +21,6 @@ public class SpeciesController {
     @Autowired
     @Qualifier("speciesServiceImpl")
     private SpeciesService speciesService;
-
-    /**
-     * 查询所有种
-     *
-     * @param pageNum  当前页
-     * @param pageSize 页数
-     * @return list
-     */
-    @GetMapping("all")
-    @ApiOperation("查询所有种")
-    public ResBody<List<Species>> selectAllSpecies(@RequestParam int pageNum, @RequestParam int pageSize) {
-        return ResBody.success(speciesService.selectAllSpecies(pageNum, pageSize));
-    }
-
-    /**
-     * 根据id查询种
-     *
-     * @param id id
-     * @return list
-     */
-    @GetMapping
-    @ApiOperation("根据id查询种")
-    public ResBody<List<Species>> selectSpeciesById(@RequestParam int id) {
-        return ResBody.success(speciesService.selectSpeciesById(id));
-    }
 
     /**
      * 插入种

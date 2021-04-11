@@ -6,10 +6,7 @@ import com.rjgc.service.SpeciesVoService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,12 @@ public class SpeciesVoController {
     @ApiOperation("根据id查询种")
     public ResBody<List<SpeciesVo>> selectSpeciesVoById(@RequestParam int id) {
         return ResBody.success(speciesVoService.selectSpeciesVoById(id));
+    }
+
+    @GetMapping("{code}")
+    @ApiOperation("根据code查询种")
+    public ResBody<List<SpeciesVo>> selectSpeciesByCode(@PathVariable String code) {
+        return ResBody.success(speciesVoService.selectSpeciesVoByCode(code));
     }
 
     /**

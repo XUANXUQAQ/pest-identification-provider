@@ -28,4 +28,9 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     public List<SpeciesVo> selectAllSpeciesVo(int pageNum, int pageSize) {
         return speciesVoMapper.selectAllSpecies(pageNum, pageSize);
     }
+
+    @Override
+    public List<SpeciesVo> selectSpeciesVoByCode(String code) {
+        return speciesVoMapper.selectSpeciesByCode(code);
+    }
 }

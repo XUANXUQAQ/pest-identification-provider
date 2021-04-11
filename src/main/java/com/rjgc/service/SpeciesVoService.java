@@ -14,4 +14,6 @@ public interface SpeciesVoService extends IService<SpeciesVo> {
     List<SpeciesVo> selectSpeciesVoById(int id);
 
     List<SpeciesVo> selectAllSpeciesVo(int pageNum, int pageSize);
+
+    List<SpeciesVo> selectSpeciesVoByCode(String code);
 }

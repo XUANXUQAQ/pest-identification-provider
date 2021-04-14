@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -46,8 +47,14 @@ public class FamilyController {
      */
     @GetMapping("all")
     @ApiOperation("查询所有科")
-    public ResBody<List<Family>> selectAllFamilies(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public ResBody<Map<List<Family>, Long>> selectAllFamilies(@RequestParam int pageNum, @RequestParam int pageSize) {
         return ResBody.success(familyService.selectAllFamilies(pageNum, pageSize));
+    }
+
+    @GetMapping("name")
+    @ApiOperation("根据名称查询")
+    public ResBody<Map<List<Family>, Long>> selectFamiliesByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
+        return ResBody.success(familyService.selectFamiliesByName(pageNum, pageSize, name));
     }
 
     /**

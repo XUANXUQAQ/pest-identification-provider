@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.rjgc.entity.SpeciesVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -13,7 +14,9 @@ public interface SpeciesVoService extends IService<SpeciesVo> {
 
     List<SpeciesVo> selectSpeciesVoById(int id);
 
-    List<SpeciesVo> selectAllSpeciesVo(int pageNum, int pageSize);
+    Map<List<SpeciesVo>, Long> selectAllSpeciesVo(int pageNum, int pageSize);
 
     List<SpeciesVo> selectSpeciesVoByCode(String code);
+
+    Map<List<SpeciesVo>, Long> selectSpeciesByName(int pageNum, int pageSize, String name);
 }

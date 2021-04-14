@@ -1,6 +1,7 @@
 package com.rjgc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Orders;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -23,9 +26,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     private OrderMapper orderMapper;
 
     @Override
-    public List<Orders> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public Map<List<Orders>, Long> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
-        return this.page(new Page<>(pageNum, pageSize), wrapper).getRecords();
+        return getListPagesMap(pageNum, pageSize, wrapper);
     }
 
     @Override
@@ -33,6 +36,20 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         wrapper.eq("id", id);
         return orderMapper.selectList(wrapper);
+    }
+
+    @Override
+    public Map<List<Orders>, Long> selectOrdersByName(int pageNum, int pageSize, String name) {
+        QueryWrapper<Orders> wrapper = new QueryWrapper<>();
+        wrapper.like("name", name);
+        return getListPagesMap(pageNum, pageSize, wrapper);
+    }
+
+    private Map<List<Orders>, Long> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Orders> wrapper) {
+        IPage<Orders> page = this.page(new Page<>(pageNum, pageSize), wrapper);
+        HashMap<List<Orders>, Long> map = new HashMap<>();
+        map.put(page.getRecords(), page.getPages());
+        return map;
     }
 
     @Override

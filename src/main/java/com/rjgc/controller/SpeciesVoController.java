@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -34,6 +35,12 @@ public class SpeciesVoController {
         return ResBody.success(speciesVoService.selectSpeciesVoByCode(code));
     }
 
+    @GetMapping("name")
+    @ApiOperation("根据name查询")
+    public ResBody<Map<List<SpeciesVo>, Long>> selectSpeciesByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
+        return ResBody.success(speciesVoService.selectSpeciesByName(pageNum, pageSize, name));
+    }
+
     /**
      * 查询所有种
      *
@@ -43,7 +50,7 @@ public class SpeciesVoController {
      */
     @GetMapping("all")
     @ApiOperation("查询所有种")
-    public ResBody<List<SpeciesVo>> selectAllSpecies(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public ResBody<Map<List<SpeciesVo>, Long>> selectAllSpecies(@RequestParam int pageNum, @RequestParam int pageSize) {
         return ResBody.success(speciesVoService.selectAllSpeciesVo(pageNum, pageSize));
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -33,8 +34,14 @@ public class OrderController {
 
     @GetMapping("all")
     @ApiOperation("查询所有目")
-    public ResBody<List<Orders>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public ResBody<Map<List<Orders>, Long>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
         return ResBody.success(orderService.selectAllOrders(pageNum, pageSize));
+    }
+
+    @GetMapping("name")
+    @ApiOperation("根据名称查询")
+    public ResBody<Map<List<Orders>, Long>> selectOrdersByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
+        return ResBody.success(orderService.selectOrdersByName(pageNum, pageSize, name));
     }
 
     @GetMapping

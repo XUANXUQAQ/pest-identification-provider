@@ -18,7 +18,8 @@ import java.util.List;
  * @author zhaoyunjie
  * @date 2021-04-08 17:30
  */
-@RestController("order")
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
     @Autowired

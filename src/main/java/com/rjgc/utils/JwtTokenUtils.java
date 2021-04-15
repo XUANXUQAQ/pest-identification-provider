@@ -1,7 +1,5 @@
 package com.rjgc.utils;
 
-
-import com.sun.xml.internal.messaging.saaj.util.Base64;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.Date;
 
 /**
@@ -35,7 +34,7 @@ public class JwtTokenUtils {
      */
     public String generateToken(String username) {
         if (base64EncodeSecret == null) {
-            base64EncodeSecret = Base64.encode(secret.getBytes(StandardCharsets.UTF_8));
+            base64EncodeSecret = Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8));
         }
         // 初始时间
         Date nowDate = new Date();
@@ -60,7 +59,7 @@ public class JwtTokenUtils {
     public Claims getClaimByToken(String token) {
         try {
             if (base64EncodeSecret == null) {
-                base64EncodeSecret = Base64.encode(secret.getBytes(StandardCharsets.UTF_8));
+                base64EncodeSecret = Base64.getEncoder().encode(secret.getBytes(StandardCharsets.UTF_8));
             }
             return Jwts.parser()
                     .setSigningKey(base64EncodeSecret)

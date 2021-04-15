@@ -34,13 +34,13 @@ public class OrderController {
 
     @GetMapping("all")
     @ApiOperation("查询所有目")
-    public ResBody<Map<List<Orders>, Long>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public ResBody<Map<String, Object>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
         return ResBody.success(orderService.selectAllOrders(pageNum, pageSize));
     }
 
     @GetMapping("name")
     @ApiOperation("根据名称查询")
-    public ResBody<Map<List<Orders>, Long>> selectOrdersByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
+    public ResBody<Map<String, Object>> selectOrdersByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
         return ResBody.success(orderService.selectOrdersByName(pageNum, pageSize, name));
     }
 

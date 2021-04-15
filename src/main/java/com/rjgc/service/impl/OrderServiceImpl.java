@@ -26,7 +26,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     private OrderMapper orderMapper;
 
     @Override
-    public Map<List<Orders>, Long> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public Map<String, Object> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
@@ -39,16 +39,17 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     }
 
     @Override
-    public Map<List<Orders>, Long> selectOrdersByName(int pageNum, int pageSize, String name) {
+    public Map<String, Object> selectOrdersByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
 
-    private Map<List<Orders>, Long> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Orders> wrapper) {
+    private Map<String, Object> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Orders> wrapper) {
         IPage<Orders> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<List<Orders>, Long> map = new HashMap<>();
-        map.put(page.getRecords(), page.getPages());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", page.getRecords());
+        map.put("pages", page.getPages());
         return map;
     }
 

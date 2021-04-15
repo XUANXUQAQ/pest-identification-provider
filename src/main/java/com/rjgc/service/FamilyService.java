@@ -11,11 +11,11 @@ import java.util.Map;
  * @date 2021-04-08 13:19
  */
 public interface FamilyService extends IService<Family> {
-    Map<List<Family>, Long> selectAllFamilies(int pageNum, int pageSize);
+    Map<String, Object> selectAllFamilies(int pageNum, int pageSize);
 
     List<Family> selectFamiliesById(int id);
 
-    Map<List<Family>, Long> selectFamiliesByName(int pageNum, int pageSize, String name);
+    Map<String, Object> selectFamiliesByName(int pageNum, int pageSize, String name);
 
     int insertFamily(int orderId, Family family);
 

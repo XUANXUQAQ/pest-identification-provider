@@ -35,12 +35,13 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     }
 
     @Override
-    public Map<List<SpeciesVo>, Long> selectAllSpeciesVo(int pageNum, int pageSize) {
+    public Map<String, Object> selectAllSpeciesVo(int pageNum, int pageSize) {
         List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies(pageNum, pageSize);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         Integer count = speciesMapper.selectCount(wrapper);
-        HashMap<List<SpeciesVo>, Long> map = new HashMap<>();
-        map.put(speciesVos, (long) ((count + pageSize - 1) / pageSize));
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", speciesVos);
+        map.put("pages", (long) ((count + pageSize - 1) / pageSize));
         return map;
     }
 
@@ -50,12 +51,13 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     }
 
     @Override
-    public Map<List<SpeciesVo>, Long> selectSpeciesByName(int pageNum, int pageSize, String name) {
+    public Map<String, Object> selectSpeciesByName(int pageNum, int pageSize, String name) {
         QueryWrapper<SpeciesVo> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
         IPage<SpeciesVo> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<List<SpeciesVo>, Long> map = new HashMap<>();
-        map.put(page.getRecords(), page.getPages());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", page.getRecords());
+        map.put("pages", page.getPages());
         return map;
     }
 }

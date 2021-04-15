@@ -31,9 +31,9 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     private OrderFamilyService orderFamilyService;
 
     @Override
-    public Map<List<Family>, Long> selectAllFamilies(int pageNum, int pageSize) {
+    public Map<String, Object> selectAllFamilies(int pageNum, int pageSize) {
         QueryWrapper<Family> queryWrapper = new QueryWrapper<>();
-        return getListPagesMap(pageNum, pageSize, queryWrapper);
+        return getStringObjectMap(pageNum, pageSize, queryWrapper);
     }
 
     @Override
@@ -44,16 +44,17 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     }
 
     @Override
-    public Map<List<Family>, Long> selectFamiliesByName(int pageNum, int pageSize, String name) {
+    public Map<String, Object> selectFamiliesByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Family> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
-        return getListPagesMap(pageNum, pageSize, wrapper);
+        return getStringObjectMap(pageNum, pageSize, wrapper);
     }
 
-    private Map<List<Family>, Long> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Family> wrapper) {
+    private Map<String, Object> getStringObjectMap(int pageNum, int pageSize, QueryWrapper<Family> wrapper) {
         IPage<Family> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<List<Family>, Long> listLongHashMap = new HashMap<>();
-        listLongHashMap.put(page.getRecords(), page.getPages());
+        HashMap<String, Object> listLongHashMap = new HashMap<>();
+        listLongHashMap.put("data", page.getRecords());
+        listLongHashMap.put("pages", page.getPages());
         return listLongHashMap;
     }
 

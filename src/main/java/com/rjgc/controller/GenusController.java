@@ -40,13 +40,13 @@ public class GenusController {
      */
     @GetMapping("all")
     @ApiOperation("查询所有属")
-    public ResBody<Map<List<Genus>, Long>> selectAllGenus(@RequestParam int pageNum, @RequestParam int pageSize) {
+    public ResBody<Map<String, Object>> selectAllGenus(@RequestParam int pageNum, @RequestParam int pageSize) {
         return ResBody.success(genusService.selectAllGenuses(pageNum, pageSize));
     }
 
     @GetMapping("name")
     @ApiOperation("根据名称查询")
-    public ResBody<Map<List<Genus>, Long>> selectGenusByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
+    public ResBody<Map<String, Object>> selectGenusByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
         return ResBody.success(genusService.selectGenusesByName(pageNum, pageSize, name));
     }
 

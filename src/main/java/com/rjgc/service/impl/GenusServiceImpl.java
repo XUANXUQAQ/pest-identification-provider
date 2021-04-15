@@ -31,7 +31,7 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
     private FamilyGenusService familyGenusService;
 
     @Override
-    public Map<List<Genus>, Long> selectAllGenuses(int pageNum, int pageSize) {
+    public Map<String, Object> selectAllGenuses(int pageNum, int pageSize) {
         QueryWrapper<Genus> genusQueryWrapper = new QueryWrapper<>();
         return getListPagesMap(pageNum, pageSize, genusQueryWrapper);
     }
@@ -43,16 +43,17 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
     }
 
     @Override
-    public Map<List<Genus>, Long> selectGenusesByName(int pageNum, int pageSize, String name) {
+    public Map<String, Object> selectGenusesByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Genus> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
 
-    private Map<List<Genus>, Long> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Genus> wrapper) {
+    private Map<String, Object> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Genus> wrapper) {
         IPage<Genus> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<List<Genus>, Long> map = new HashMap<>();
-        map.put(page.getRecords(), page.getPages());
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", page.getRecords());
+        map.put("pages", page.getPages());
         return map;
     }
 

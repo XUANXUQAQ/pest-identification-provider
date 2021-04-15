@@ -1,4 +1,4 @@
-package com.rjgc.configs;
+package com.rjgc.configs.swagger;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

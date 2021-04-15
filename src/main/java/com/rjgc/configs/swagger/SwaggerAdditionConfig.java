@@ -1,4 +1,4 @@
-package com.rjgc.configs;
+package com.rjgc.configs.swagger;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.google.common.collect.Sets;

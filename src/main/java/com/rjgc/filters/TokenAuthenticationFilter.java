@@ -7,6 +7,7 @@ import com.rjgc.service.UserService;
 import com.rjgc.utils.JwtTokenUtils;
 import com.rjgc.utils.ResponseUtils;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author zhaoyunjie
  * @date 2021-04-15 20:19
  */
+@Slf4j
 public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
     private final JwtTokenUtils jwtTokenUtil;
@@ -58,11 +60,12 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
         if (isExcludeUrl(request.getRequestURI())) {
             chain.doFilter(request, response);
         }
+
         UsernamePasswordAuthenticationToken authentication;
         try {
             authentication = getAuthentication(request.getHeader("token"));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.debug(e.getMessage());
             ResponseUtils.out(response, ResBody.error(new BizException(ExceptionsEnum.AUTHORIZE_FAILED)));
             return;
         }

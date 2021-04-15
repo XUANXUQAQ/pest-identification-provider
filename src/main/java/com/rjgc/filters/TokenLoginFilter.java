@@ -44,8 +44,9 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
             User user = new User(username, password, new ArrayList<>());
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            ResponseUtils.out(res, ResBody.error(new BizException(ExceptionsEnum.LOGIN_FAILED)));
         }
+        return null;
     }
 
     /**

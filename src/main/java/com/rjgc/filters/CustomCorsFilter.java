@@ -25,7 +25,7 @@ public class CustomCorsFilter implements Filter {
         resp.setHeader("Access-Control-Allow-Credentials", String.valueOf(corsProperties.isAllowCredentials()));
         resp.setHeader("Access-Control-Allow-Methods", corsProperties.getAllowMethods());
         resp.setHeader("Access-Control-Max-Age", String.valueOf(corsProperties.getMaxAge()));
-        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        resp.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, token");
         chain.doFilter(request, response);
     }
 }

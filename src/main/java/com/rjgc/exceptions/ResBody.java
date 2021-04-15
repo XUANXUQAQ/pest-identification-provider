@@ -64,4 +64,13 @@ public class ResBody<T> {
         rb.setResult(null);
         return rb;
     }
+
+    @Override
+    public String toString() {
+        return "ResBody{" +
+                "code=" + code +
+                ", message='" + message + '\'' +
+                ", result=" + result +
+                '}';
+    }
 }

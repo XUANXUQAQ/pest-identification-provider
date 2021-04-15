@@ -12,7 +12,7 @@ import java.io.IOException;
  * @date 2021-04-14 23:39
  */
 @Configuration
-@WebFilter("corsFilter")
+@WebFilter(urlPatterns = "*")
 public class CorsConfig implements Filter {
 
     @Override

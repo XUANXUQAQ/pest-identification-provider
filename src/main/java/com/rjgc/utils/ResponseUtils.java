@@ -14,7 +14,7 @@ import java.io.PrintWriter;
  * @date 2021-04-15 20:21
  */
 public class ResponseUtils {
-    public static void out(HttpServletResponse response, ResBody<String> result) {
+    public static <T> void out(HttpServletResponse response, ResBody<T> result) {
         ObjectMapper mapper = new ObjectMapper();
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);

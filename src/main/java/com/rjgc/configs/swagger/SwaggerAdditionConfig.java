@@ -30,25 +30,9 @@ public class SwaggerAdditionConfig implements ApiListingScannerPlugin {
     @Override
     public List<ApiDescription> apply(DocumentationContext documentationContext) {
         Operation login = buildLogin();
-        Operation logout = buildLogout();
         ApiDescription loginApiDescription = new ApiDescription("login", "/login", "登录接口",
                 Collections.singletonList(login), false);
-        ApiDescription logoutApiDescription = new ApiDescription("logout", "/logout", "注销接口",
-                Collections.singletonList(logout), false);
-
-        return Arrays.asList(loginApiDescription, logoutApiDescription);
-    }
-
-    private Operation buildLogout() {
-        return new OperationBuilder(new CachingOperationNameGenerator())
-                .method(HttpMethod.POST)
-                .summary("logout")
-                .notes("注销")
-                .consumes(Sets.newHashSet(MediaType.APPLICATION_FORM_URLENCODED_VALUE)) // 接收参数格式
-                .tags(Sets.newHashSet("logout"))
-                .responseMessages(Collections.singleton(
-                        new ResponseMessageBuilder().code(200).message("请求成功").build()))
-                .build();
+        return Collections.singletonList(loginApiDescription);
     }
 
     private Operation buildLogin() {

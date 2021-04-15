@@ -1,6 +1,5 @@
 package com.rjgc.filters;
 
-import com.alibaba.fastjson.JSONObject;
 import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
@@ -60,8 +59,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         map.put("token", token);
         map.put("username", user.getUsername());
         map.put("password", user.getPassword());
-        String s = JSONObject.toJSONString(map);
-        ResponseUtils.out(response, ResBody.success(s));
+        ResponseUtils.out(response, ResBody.success(map));
     }
 
     /**

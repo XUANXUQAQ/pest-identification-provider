@@ -59,7 +59,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         HashMap<String, Object> map = new HashMap<>();
         map.put("token", token);
         map.put("username", user.getUsername());
-        map.put("password", user.getPassword());
         ResponseUtils.out(response, ResBody.success(map));
     }
 

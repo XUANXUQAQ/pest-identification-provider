@@ -65,7 +65,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             authentication = getAuthentication(request.getHeader("token"));
         } catch (Exception e) {
-            logger.debug(e.getMessage());
+            log.info(e.getMessage());
             ResponseUtils.out(response, ResBody.error(new BizException(ExceptionsEnum.AUTHORIZE_FAILED)));
             return;
         }

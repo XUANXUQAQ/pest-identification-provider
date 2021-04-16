@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @Data
 @Component
 @ConfigurationProperties(prefix = "jwt")
+@Slf4j
 public class JwtTokenUtils {
 
     private String secret;
@@ -66,7 +68,7 @@ public class JwtTokenUtils {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.info(e.getMessage());
             return null;
         }
     }

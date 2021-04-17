@@ -36,17 +36,12 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) {
-        try {
-            Map<String, String[]> map = req.getParameterMap();
-            String username = map.get("username")[0];
-            String password = map.get("password")[0];
-            User user = new User(username, password, new ArrayList<>());
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
-        } catch (Exception e) {
-            ResponseUtils.out(res, ResBody.error(new BizException(ExceptionsEnum.LOGIN_FAILED)));
-        }
-        return null;
+    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+        Map<String, String[]> map = req.getParameterMap();
+        String username = map.get("username")[0];
+        String password = map.get("password")[0];
+        User user = new User(username, password, new ArrayList<>());
+        return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), new ArrayList<>()));
     }
 
     /**

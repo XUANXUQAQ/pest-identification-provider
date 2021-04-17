@@ -5,22 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 /**
  * @author zhaoyunjie
  * @date 2021-04-08 13:13
  */
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Data
-@Table(name = "orders")
 public class Orders {
 
-    @Id
     private int id;
 
     @JSONField(name = "name")

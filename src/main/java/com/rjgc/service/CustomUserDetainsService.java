@@ -1,16 +1,15 @@
 package com.rjgc.service;
 
-import com.rjgc.entity.User;
+import com.rjgc.entity.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,20 +25,14 @@ public class CustomUserDetainsService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        List<User> users = userService.selectUser();
-        if (users.isEmpty()) {
-            throw new NullPointerException("user数据库为空");
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        List<UserInfo> userInfos = userService.selectUserByName(username);
+        if (userInfos.isEmpty()) {
+            throw new UsernameNotFoundException("未找到用户" + username);
         }
-        User user = users.get(0);
-        List<GrantedAuthority> authorities = new ArrayList<>();
-
-        String[] roles = user.getRole().split(",");
-
-        for (String role : roles) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        UserInfo userInfo = userInfos.get(0);
+        return new User(userInfo.getUsername(),
+                userInfo.getPassword(),
+                AuthorityUtils.commaSeparatedStringToAuthorityList(userInfo.getRole()));
     }
 }

@@ -2,7 +2,6 @@ package com.rjgc.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rjgc.entity.SpeciesVo;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.List;
  * @author zhaoyunjie
  * @date 2021-04-09 16:38
  */
-@Mapper
 public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
 
     @Select("select species.id    as id,\n" +

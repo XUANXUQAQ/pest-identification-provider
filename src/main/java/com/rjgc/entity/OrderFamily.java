@@ -1,13 +1,10 @@
 package com.rjgc.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * @author zhaoyunjie
@@ -16,13 +13,11 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
-@Table(name = "order_family")
 public class OrderFamily {
 
     @JSONField(name = "order_id")
     private int orderId;
 
-    @Id
+    @TableId
     private int familyId;
 }

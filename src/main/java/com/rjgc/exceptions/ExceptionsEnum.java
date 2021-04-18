@@ -7,7 +7,7 @@ package com.rjgc.exceptions;
 public enum ExceptionsEnum {
 
     SUCCESS(20000, "成功"),
-    IN_USE(40000, "仍然被占用"),
+    IN_USE(40000, "当前资源仍然被占用"),
     INVALID_ID(40001, "无效的id"),
     DATABASE_FAILED(40002, "数据库操作失败"),
     LOGIN_FAILED(40003, "登录失败"),

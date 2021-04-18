@@ -23,6 +23,7 @@ public class OrderFamilyServiceImpl extends ServiceImpl<OrderFamilyMapper, Order
     @Override
     public List<OrderFamily> selectByOrderId(int orderId) {
         QueryWrapper<OrderFamily> wrapper = new QueryWrapper<>();
+        wrapper.eq("order_id", orderId);
         return orderFamilyMapper.selectList(wrapper);
     }
 

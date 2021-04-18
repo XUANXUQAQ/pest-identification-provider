@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Genus;
+import com.rjgc.mapper.FamilyGenusMapper;
 import com.rjgc.mapper.GenusMapper;
 import com.rjgc.service.FamilyGenusService;
 import com.rjgc.service.GenusService;
@@ -25,6 +26,9 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
 
     @Autowired
     private GenusMapper genusMapper;
+
+    @Autowired
+    private FamilyGenusMapper familyGenusMapper;
 
     @Autowired
     @Qualifier("familyGenusServiceImpl")
@@ -69,7 +73,14 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
 
     @Override
     public int deleteGenusById(int id) {
-        return genusMapper.deleteById(id);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("genus_id", id);
+        if (familyGenusMapper.deleteByMap(map) == 1) {
+            if (genusMapper.deleteById(id) == 1) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     @Override

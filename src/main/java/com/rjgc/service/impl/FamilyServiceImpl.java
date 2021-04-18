@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Family;
 import com.rjgc.mapper.FamilyMapper;
+import com.rjgc.mapper.OrderFamilyMapper;
 import com.rjgc.service.FamilyService;
 import com.rjgc.service.OrderFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
 
     @Autowired
     private FamilyMapper familyMapper;
+
+    @Autowired
+    private OrderFamilyMapper orderFamilyMapper;
 
     @Autowired
     @Qualifier("orderFamilyServiceImpl")
@@ -70,7 +74,14 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
 
     @Override
     public int deleteFamilyById(int id) {
-        return familyMapper.deleteById(id);
+        Map<String, Object> map = new HashMap<>();
+        map.put("family_id", id);
+        if (orderFamilyMapper.deleteByMap(map) == 1) {
+            if (familyMapper.deleteById(id) == 1) {
+                return 1;
+            }
+        }
+        return 0;
     }
 
     @Override

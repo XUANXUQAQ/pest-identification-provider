@@ -38,7 +38,7 @@ public class SpeciesVoController {
     @GetMapping("name")
     @ApiOperation("根据name查询")
     public ResBody<Map<String, Object>> selectSpeciesByName(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam String name) {
-        return ResBody.success(speciesVoService.selectSpeciesByName(pageNum, pageSize, name));
+        return ResBody.success(speciesVoService.selectSpeciesVoByName(pageNum, pageSize, name));
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.rjgc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Species;
 import com.rjgc.entity.SpeciesVo;
@@ -36,7 +34,7 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
 
     @Override
     public Map<String, Object> selectAllSpeciesVo(int pageNum, int pageSize) {
-        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies(pageNum, pageSize);
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies(pageNum - 1, pageSize);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         Integer count = speciesMapper.selectCount(wrapper);
         HashMap<String, Object> map = new HashMap<>();
@@ -51,13 +49,14 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     }
 
     @Override
-    public Map<String, Object> selectSpeciesByName(int pageNum, int pageSize, String name) {
-        QueryWrapper<SpeciesVo> wrapper = new QueryWrapper<>();
+    public Map<String, Object> selectSpeciesVoByName(int pageNum, int pageSize, String name) {
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByName(name);
+        QueryWrapper<Species> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
-        IPage<SpeciesVo> page = this.page(new Page<>(pageNum, pageSize), wrapper);
+        Integer count = speciesMapper.selectCount(wrapper);
         HashMap<String, Object> map = new HashMap<>();
-        map.put("data", page.getRecords());
-        map.put("pages", page.getPages());
+        map.put("data", speciesVos);
+        map.put("pages", (long) ((count + pageSize - 1) / pageSize));
         return map;
     }
 }

@@ -28,6 +28,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     @Override
     public Map<String, Object> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
+        wrapper.orderByAsc("id");
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
 
@@ -42,6 +43,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     public Map<String, Object> selectOrdersByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
+        wrapper.orderByAsc("id");
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
 

@@ -37,6 +37,7 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
     @Override
     public Map<String, Object> selectAllGenuses(int pageNum, int pageSize) {
         QueryWrapper<Genus> genusQueryWrapper = new QueryWrapper<>();
+        genusQueryWrapper.orderByAsc("id");
         return getListPagesMap(pageNum, pageSize, genusQueryWrapper);
     }
 
@@ -50,6 +51,7 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
     public Map<String, Object> selectGenusesByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Genus> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
+        wrapper.orderByAsc("id");
         return getListPagesMap(pageNum, pageSize, wrapper);
     }
 

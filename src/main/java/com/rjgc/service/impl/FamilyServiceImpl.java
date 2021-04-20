@@ -37,6 +37,7 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     @Override
     public Map<String, Object> selectAllFamilies(int pageNum, int pageSize) {
         QueryWrapper<Family> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByAsc("id");
         return getStringObjectMap(pageNum, pageSize, queryWrapper);
     }
 
@@ -51,6 +52,7 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     public Map<String, Object> selectFamiliesByName(int pageNum, int pageSize, String name) {
         QueryWrapper<Family> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
+        wrapper.orderByAsc("id");
         return getStringObjectMap(pageNum, pageSize, wrapper);
     }
 

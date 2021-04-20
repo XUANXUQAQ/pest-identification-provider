@@ -48,7 +48,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "                 left join family_genus on g.id = family_genus.genus_id\n" +
             "                 left join family f on family_genus.family_id = f.id\n" +
             "                 left join order_family on order_family.family_id = f.id\n" +
-            "                 left join orders o on order_family.order_id = o.id\n" +
+            "                 left join orders o on order_family.order_id = o.id order by id\n" +
             "        limit #{pageNum}, #{pageSize}")
     List<SpeciesVo> selectAllSpecies(int pageNum, int pageSize);
 
@@ -88,7 +88,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "         left join family_genus on g.id = family_genus.genus_id\n" +
             "         left join family f on family_genus.family_id = f.id\n" +
             "         left join order_family on order_family.family_id = f.id\n" +
-            "         left join orders o on order_family.order_id = o.id\n" +
+            "         left join orders o on order_family.order_id = o.id order by id\n" +
             "where species.name like \"%${name}%\"")
     List<SpeciesVo> selectSpeciesByName(String name);
 }

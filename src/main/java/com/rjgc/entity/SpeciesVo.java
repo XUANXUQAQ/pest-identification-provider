@@ -44,4 +44,6 @@ public class SpeciesVo {
 
     @JSONField(name = "order_id")
     private int orderId;
+
+    private String image;
 }

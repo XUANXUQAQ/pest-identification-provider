@@ -17,6 +17,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "               species.latin as latin,\n" +
             "               species.plant as plant,\n" +
             "               species.area  as area,\n" +
+            "               species.image as image,\n" +
             "               g.name        as genus_name,\n" +
             "               g.id          as genus_id,\n" +
             "               f.name        as family_name,\n" +
@@ -37,6 +38,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "               species.latin as latin,\n" +
             "               species.plant as plant,\n" +
             "               species.area  as area,\n" +
+            "               species.image as image,\n" +
             "               g.name        as genus_name,\n" +
             "               g.id          as genus_id,\n" +
             "               f.name        as family_name,\n" +
@@ -57,6 +59,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "       species.latin as latin,\n" +
             "       species.plant as plant,\n" +
             "       species.area  as area,\n" +
+            "       species.image as image,\n" +
             "       g.name        as genus_name,\n" +
             "       g.id          as genus_id,\n" +
             "       f.name        as family_name,\n" +
@@ -77,6 +80,7 @@ public interface SpeciesVoMapper extends BaseMapper<SpeciesVo> {
             "       species.latin as latin,\n" +
             "       species.plant as plant,\n" +
             "       species.area  as area,\n" +
+            "       species.image as image,\n" +
             "       g.name        as genus_name,\n" +
             "       g.id          as genus_id,\n" +
             "       f.name        as family_name,\n" +

@@ -33,5 +33,7 @@ public class Species {
 
     @JSONField(name = "genus_id")
     private int genusId;
+
+    private String image;
 }
 

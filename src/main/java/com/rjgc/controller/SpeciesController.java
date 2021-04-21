@@ -4,6 +4,7 @@ import com.rjgc.entity.Species;
 import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
+import com.rjgc.service.GenusService;
 import com.rjgc.service.SpeciesService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class SpeciesController {
     @Qualifier("speciesServiceImpl")
     private SpeciesService speciesService;
 
+    @Autowired
+    @Qualifier("genusServiceImpl")
+    private GenusService genusService;
+
     /**
      * 插入种
      *
@@ -31,6 +36,9 @@ public class SpeciesController {
     @PostMapping
     @ApiOperation("插入种")
     public ResBody<Integer> insertSpecies(@RequestBody Species species) {
+        if (genusService.selectGenusesById(species.getGenusId()).isEmpty()) {
+            throw new BizException(ExceptionsEnum.INVALID_ID);
+        }
         if (speciesService.insertSpecies(species) == 1) {
             return ResBody.success();
         } else {

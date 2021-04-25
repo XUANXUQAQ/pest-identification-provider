@@ -9,4 +9,5 @@ public interface FamilyGenusService extends IService<FamilyGenus> {
 
     int updateByGenusId(int familyId, int genusId);
 
+    int deleteByGenusId(int genusId);
 }

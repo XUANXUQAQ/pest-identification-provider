@@ -12,4 +12,6 @@ public interface OrderFamilyService extends IService<OrderFamily> {
     int insert(int orderId, int familyId);
 
     int updateByFamilyId(int orderId, int familyId);
+
+    int deleteByFamilyId(int familyId);
 }

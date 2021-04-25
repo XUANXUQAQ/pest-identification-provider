@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-
 /**
  * @author zhaoyunjie
  * @date 2021-04-08 16:36
@@ -31,24 +29,20 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
 
     @Override
     public int insertGenus(int familyId, Genus genus) {
-        if (familyGenusService.insert(familyId, genus.getId()) == 1) {
-            if (genusMapper.insert(genus) == 1) {
-                return 1;
-            }
-        }
-        return 0;
+       return genusMapper.insert(genus);
     }
 
     @Override
     public int deleteGenusById(int id) {
-        HashMap<String, Object> map = new HashMap<>();
+     /*   HashMap<String, Object> map = new HashMap<>();
         map.put("genus_id", id);
         if (familyGenusMapper.deleteByMap(map) == 1) {
-            if (genusMapper.deleteById(id) == 1) {
+            if ( == 1) {
                 return 1;
             }
         }
-        return 0;
+        return 0;*/
+        return genusMapper.deleteById(id);
     }
 
     @Override

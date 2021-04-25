@@ -7,6 +7,8 @@ import com.rjgc.service.OrderFamilyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 /**
  * @author zhaoyunjie
  * @date 2021-04-08 17:02
@@ -31,5 +33,12 @@ public class OrderFamilyServiceImpl extends ServiceImpl<OrderFamilyMapper, Order
         orderFamily.setOrderId(orderId);
         orderFamily.setFamilyId(familyId);
         return orderFamilyMapper.updateById(orderFamily);
+    }
+
+    @Override
+    public int deleteByFamilyId(int familyId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("family_id", familyId);
+        return orderFamilyMapper.deleteByMap(map);
     }
 }

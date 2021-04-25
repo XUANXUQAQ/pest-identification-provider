@@ -8,10 +8,12 @@ import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.*;
+import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,6 +47,9 @@ public class FamilyController {
     @Qualifier("familyVoServiceImpl")
     @Autowired
     private FamilyVoService familyVoService;
+
+    @Autowired
+    private DBUtils dbUtils;
 
     /**
      * 通过id查询科
@@ -85,6 +90,7 @@ public class FamilyController {
      */
     @PostMapping("{orderId}")
     @ApiOperation("插入科信息")
+    @Transactional
     public ResBody<Integer> insertFamily(@PathVariable int orderId, @RequestBody Family family) {
         //检查目id是否有效
         List<Orders> orders = (List<Orders>) orderService.selectOrdersById(orderId).get("data");
@@ -93,12 +99,17 @@ public class FamilyController {
             throw new BizException(ExceptionsEnum.INVALID_ID);
         }
         Family tmp = new Family();
-        String[] ignored = {"id"};
-        BeanUtils.copyProperties(family, tmp, ignored);
-        if (familyService.insertFamily(orderId, family) == 1) {
-            return ResBody.success();
-        } else {
+        BeanUtils.copyProperties(family, tmp, "id");
+        if (!dbUtils.executeSql("alter table family AUTO_INCREMENT=1")) {
             throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        if (familyService.insertFamily(orderId, tmp) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        if (orderFamilyService.insert(orderId, tmp.getId()) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        } else {
+            return ResBody.success();
         }
     }
 
@@ -110,21 +121,23 @@ public class FamilyController {
      */
     @PutMapping
     @ApiOperation("更新科信息")
+    @Transactional
     public ResBody<Integer> updateFamily(@RequestParam int orderId, @RequestBody Family newFamily) {
         // 检查目id是否有效
-        Map<String, Object> map = orderService.selectOrdersById(orderId);
-        if (map.isEmpty()) {
+        List<Orders> list = (List<Orders>) orderService.selectOrdersById(orderId).get("data");
+        if (list.isEmpty()) {
             throw new BizException(ExceptionsEnum.INVALID_ID);
         }
         OrderFamily orderFamily = new OrderFamily();
         orderFamily.setOrderId(orderId);
         orderFamily.setFamilyId(newFamily.getId());
-        if (familyService.updateFamily(newFamily) == 1) {
-            if (orderFamilyService.updateByFamilyId(orderId, newFamily.getId()) == 1) {
-                return ResBody.success();
-            }
+        if (familyService.updateFamily(newFamily) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
         }
-        throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        if (orderFamilyService.updateByFamilyId(orderId, newFamily.getId()) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        return ResBody.success();
     }
 
     /**
@@ -135,18 +148,21 @@ public class FamilyController {
      */
     @DeleteMapping
     @ApiOperation("根据id删除科")
+    @Transactional
     public ResBody<Integer> deleteFamilyById(@RequestParam int id) {
-        //检查是否仍有种关联于该属
+        //检查是否仍有属关联于该科
         List<FamilyGenusVo> familyGenus = familyGenusVoService.selectByFamilyId(id);
         if (familyGenus.isEmpty()) {
-            if (familyService.deleteFamilyById(id) == 1) {
-                return ResBody.success();
-            } else {
+            if (orderFamilyService.deleteByFamilyId(id) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            if (familyService.deleteFamilyById(id) != 1) {
                 throw new BizException(ExceptionsEnum.DATABASE_FAILED);
             }
         } else {
             //id仍被使用
             throw new BizException(ExceptionsEnum.IN_USE);
         }
+        return ResBody.success();
     }
 }

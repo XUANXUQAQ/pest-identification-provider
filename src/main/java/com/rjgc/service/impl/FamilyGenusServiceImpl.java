@@ -7,6 +7,8 @@ import com.rjgc.service.FamilyGenusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+
 /**
  * @author zhaoyunjie
  * @date 2021-04-08 16:52
@@ -31,5 +33,12 @@ public class FamilyGenusServiceImpl extends ServiceImpl<FamilyGenusMapper, Famil
         familyGenus.setGenusId(genusId);
         familyGenus.setFamilyId(familyId);
         return familyGenusMapper.updateById(familyGenus);
+    }
+
+    @Override
+    public int deleteByGenusId(int genusId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("genus_id", genusId);
+        return familyGenusMapper.deleteByMap(map);
     }
 }

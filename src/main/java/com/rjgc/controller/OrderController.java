@@ -7,7 +7,9 @@ import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.OrderFamilyVoService;
 import com.rjgc.service.OrderService;
+import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +34,10 @@ public class OrderController {
     @Qualifier("orderServiceImpl")
     private OrderService orderService;
 
+    @Autowired
+    private DBUtils dbUtils;
+
+
     @GetMapping("all")
     @ApiOperation("查询所有目")
     public ResBody<Map<String, Object>> selectAllOrders(@RequestParam int pageNum, @RequestParam int pageSize) {
@@ -53,11 +59,15 @@ public class OrderController {
     @PostMapping
     @ApiOperation("添加目")
     public ResBody<Integer> insertOrder(@RequestBody Orders orders) {
-        if (orderService.insertOrder(orders) == 1) {
-            return ResBody.success();
-        } else {
+        if (!dbUtils.executeSql("alter table orders AUTO_INCREMENT=1")) {
             throw new BizException(ExceptionsEnum.DATABASE_FAILED);
         }
+        Orders tmp = new Orders();
+        BeanUtils.copyProperties(orders, tmp, "id");
+        if (orderService.insertOrder(tmp) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        return ResBody.success();
     }
 
     @DeleteMapping
@@ -80,7 +90,7 @@ public class OrderController {
     @PutMapping
     @ApiOperation("更新目")
     public ResBody<Integer> updateOrder(@RequestBody Orders newOrders) {
-        //检查是否仍有属关联于该目
+        //检查是否仍有科关联于该目
         List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
         if (orderFamilies.isEmpty()) {
             if (orderService.updateOrder(newOrders) == 1) {

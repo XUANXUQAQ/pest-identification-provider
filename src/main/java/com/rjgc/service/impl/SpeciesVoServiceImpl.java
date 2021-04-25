@@ -65,4 +65,13 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
         map.put("pages", (long) ((count + pageSize - 1) / pageSize));
         return map;
     }
+
+    @Override
+    public Map<String, Object> selectSpeciesVoByGenusId(int genusId) {
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByGenusId(genusId);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", speciesVos);
+        map.put("pages", 1);
+        return map;
+    }
 }

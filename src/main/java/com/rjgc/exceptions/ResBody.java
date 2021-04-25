@@ -2,6 +2,9 @@ package com.rjgc.exceptions;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author zhaoyunjie
  * @date 2021-04-09 10:42
@@ -21,7 +24,14 @@ public class ResBody<T> {
     /**
      * 响应结果
      */
-    private T result;
+    private Object result;
+
+    private static Map<String, Object> RESULT_HOLDER = new HashMap<>();
+
+    static {
+        RESULT_HOLDER.put("pages", 1);
+        RESULT_HOLDER.put("data", "");
+    }
 
     /**
      * 成功
@@ -53,7 +63,7 @@ public class ResBody<T> {
         ResBody<T> rb = new ResBody<>();
         rb.setCode(errorInfo.getExp().getResCode());
         rb.setMessage(errorInfo.getExp().getResMsg());
-        rb.setResult(null);
+        rb.setResult(RESULT_HOLDER);
         return rb;
     }
 
@@ -61,7 +71,7 @@ public class ResBody<T> {
         ResBody<T> rb = new ResBody<>();
         rb.setCode(errorCode);
         rb.setMessage(errorInfo);
-        rb.setResult(null);
+        rb.setResult(RESULT_HOLDER);
         return rb;
     }
 

@@ -1,6 +1,8 @@
 package com.rjgc.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Orders {
 
+    @TableId(type = IdType.AUTO)
     private int id;
 
     @JSONField(name = "name")

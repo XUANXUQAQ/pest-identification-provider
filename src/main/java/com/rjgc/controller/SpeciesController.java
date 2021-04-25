@@ -7,11 +7,14 @@ import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.GenusVoService;
 import com.rjgc.service.SpeciesService;
 import com.rjgc.service.SpeciesVoService;
+import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +36,9 @@ public class SpeciesController {
     @Autowired
     @Qualifier("speciesVoServiceImpl")
     private SpeciesVoService speciesVoService;
+
+    @Autowired
+    private DBUtils dbUtils;
 
     @GetMapping
     @ApiOperation("根据id查询种")
@@ -74,14 +80,20 @@ public class SpeciesController {
     @PostMapping
     @ApiOperation("插入种")
     public ResBody<Integer> insertSpecies(@RequestBody Species species) {
-        if (genusVoService.selectGenusesById(species.getGenusId()).isEmpty()) {
+        Map<String, Object> map = genusVoService.selectGenusesById(species.getGenusId());
+        List<Object> list = (List<Object>) map.get("data");
+        if (list.isEmpty()) {
             throw new BizException(ExceptionsEnum.INVALID_ID);
         }
-        if (speciesService.insertSpecies(species) == 1) {
-            return ResBody.success();
-        } else {
+        if (!dbUtils.executeSql("alter table species AUTO_INCREMENT=1")) {
             throw new BizException(ExceptionsEnum.DATABASE_FAILED);
         }
+        Species tmp = new Species();
+        BeanUtils.copyProperties(species, tmp, "id");
+        if (speciesService.insertSpecies(tmp) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        return ResBody.success();
     }
 
     /**

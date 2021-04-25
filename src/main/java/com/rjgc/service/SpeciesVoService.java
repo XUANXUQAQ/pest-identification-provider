@@ -18,4 +18,6 @@ public interface SpeciesVoService extends IService<SpeciesVo> {
     Map<String, Object> selectSpeciesVoByCode(String code);
 
     Map<String, Object> selectSpeciesVoByName(int pageNum, int pageSize, String name);
+
+    Map<String, Object> selectSpeciesVoByGenusId(int genusId);
 }

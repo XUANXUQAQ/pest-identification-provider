@@ -1,15 +1,19 @@
 package com.rjgc.controller;
 
 import com.rjgc.Vo.OrderFamilyVo;
+import com.rjgc.Vo.SpeciesVo;
 import com.rjgc.entity.Family;
 import com.rjgc.entity.Genus;
 import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.*;
+import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +55,13 @@ public class GenusController {
     @Qualifier("orderFamilyServiceImpl")
     private OrderFamilyService orderFamilyService;
 
+    @Autowired
+    @Qualifier("speciesVoServiceImpl")
+    private SpeciesVoService speciesVoService;
+
+    @Autowired
+    private DBUtils dbUtils;
+
     /**
      * 查询所有属
      *
@@ -90,18 +101,26 @@ public class GenusController {
      */
     @PostMapping("{familyId}")
     @ApiOperation("插入属")
+    @Transactional
     public ResBody<Integer> insertGenus(@PathVariable int familyId, @RequestBody Genus genus) {
-        //检查属id是否有效
+        //检查科id是否有效
         List<Family> families = (List<Family>) familyService.selectFamiliesById(familyId).get("data");
         if (families.isEmpty()) {
             //无效id
             throw new BizException(ExceptionsEnum.INVALID_ID);
         }
-        if (genusService.insertGenus(familyId, genus) == 1) {
-            return ResBody.success();
-        } else {
+        Genus tmp = new Genus();
+        BeanUtils.copyProperties(genus, tmp, "id");
+        if (!dbUtils.executeSql("alter table genus AUTO_INCREMENT=1")) {
             throw new BizException(ExceptionsEnum.DATABASE_FAILED);
         }
+        if (genusService.insertGenus(familyId, tmp) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        if (familyGenusService.insert(familyId, tmp.getId()) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        return ResBody.success();
     }
 
     /**
@@ -112,11 +131,20 @@ public class GenusController {
      */
     @DeleteMapping
     @ApiOperation("删除属")
+    @Transactional
     public ResBody<Integer> deleteGenusById(@RequestParam int id) {
-        if (genusService.deleteGenusById(id) == 1) {
+        //检查是否仍有种依赖于该属
+        List<SpeciesVo> list = (List<SpeciesVo>) speciesVoService.selectSpeciesVoByGenusId(id).get("data");
+        if (list.isEmpty()) {
+            if (genusService.deleteGenusById(id) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            if (familyGenusService.deleteByGenusId(id) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
             return ResBody.success();
         } else {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            throw new BizException(ExceptionsEnum.IN_USE);
         }
     }
 
@@ -128,6 +156,7 @@ public class GenusController {
      */
     @PutMapping
     @ApiOperation("更新属")
+    @Transactional
     public ResBody<Integer> updateGenus(@RequestParam int familyId, @RequestBody Genus newGenus) {
         // 检查目id和科id是否有效
         List<OrderFamilyVo> families = orderFamilyVoService.selectByFamilyId(familyId);
@@ -135,14 +164,16 @@ public class GenusController {
             throw new BizException(ExceptionsEnum.INVALID_ID);
         }
         OrderFamilyVo orderFamily = families.get(0);
-        // todo 原子操作
-        if (genusService.updateGenus(newGenus) == 1) {
-            if (familyGenusService.updateByGenusId(familyId, newGenus.getId()) == 1) {
-                if (orderFamilyService.updateByFamilyId(orderFamily.getOrderId(), familyId) == 1) {
-                    return ResBody.success();
-                }
-            }
+        if (genusService.updateGenus(newGenus) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
         }
-        throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        if (familyGenusService.updateByGenusId(familyId, newGenus.getId()) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        }
+        if (orderFamilyService.updateByFamilyId(orderFamily.getOrderId(), familyId) != 1) {
+            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+
+        }
+        return ResBody.success();
     }
 }

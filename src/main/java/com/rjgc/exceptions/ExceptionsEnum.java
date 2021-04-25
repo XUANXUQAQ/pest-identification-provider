@@ -9,7 +9,7 @@ public enum ExceptionsEnum {
     SUCCESS(20000, "成功"),
     IN_USE(40000, "当前资源仍然被占用"),
     INVALID_ID(40001, "无效的id"),
-    DATABASE_FAILED(40002, "数据库操作失败"),
+    DATABASE_FAILED(50000, "数据库操作失败"),
     LOGIN_FAILED(40003, "登录失败"),
     AUTHORIZE_FAILED(40004, "鉴权失败");
 

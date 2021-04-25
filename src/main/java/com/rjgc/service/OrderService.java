@@ -3,7 +3,6 @@ package com.rjgc.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rjgc.entity.Orders;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,7 +12,7 @@ import java.util.Map;
 public interface OrderService extends IService<Orders> {
     Map<String, Object> selectAllOrders(int pageNum, int pageSize);
 
-    List<Orders> selectOrdersById(int id);
+    Map<String, Object> selectOrdersById(int id);
 
     Map<String, Object> selectOrdersByName(int pageNum, int pageSize, String name);
 

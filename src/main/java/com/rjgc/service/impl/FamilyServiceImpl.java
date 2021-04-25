@@ -1,8 +1,5 @@
 package com.rjgc.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Family;
 import com.rjgc.mapper.FamilyMapper;
@@ -14,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,36 +29,6 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     @Autowired
     @Qualifier("orderFamilyServiceImpl")
     private OrderFamilyService orderFamilyService;
-
-    @Override
-    public Map<String, Object> selectAllFamilies(int pageNum, int pageSize) {
-        QueryWrapper<Family> queryWrapper = new QueryWrapper<>();
-        queryWrapper.orderByAsc("id");
-        return getStringObjectMap(pageNum, pageSize, queryWrapper);
-    }
-
-    @Override
-    public List<Family> selectFamiliesById(int id) {
-        QueryWrapper<Family> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", id);
-        return familyMapper.selectList(queryWrapper);
-    }
-
-    @Override
-    public Map<String, Object> selectFamiliesByName(int pageNum, int pageSize, String name) {
-        QueryWrapper<Family> wrapper = new QueryWrapper<>();
-        wrapper.like("name", name);
-        wrapper.orderByAsc("id");
-        return getStringObjectMap(pageNum, pageSize, wrapper);
-    }
-
-    private Map<String, Object> getStringObjectMap(int pageNum, int pageSize, QueryWrapper<Family> wrapper) {
-        IPage<Family> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<String, Object> listLongHashMap = new HashMap<>();
-        listLongHashMap.put("data", page.getRecords());
-        listLongHashMap.put("pages", page.getPages());
-        return listLongHashMap;
-    }
 
     @Override
     public int insertFamily(int orderId, Family family) {

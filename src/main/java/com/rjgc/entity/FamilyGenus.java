@@ -19,5 +19,6 @@ public class FamilyGenus {
     private int familyId;
 
     @TableId
+    @JSONField(name = "genus_id")
     private int genusId;
 }

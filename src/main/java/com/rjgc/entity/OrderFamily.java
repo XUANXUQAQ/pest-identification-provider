@@ -19,5 +19,6 @@ public class OrderFamily {
     private int orderId;
 
     @TableId
+    @JSONField(name = "family_id")
     private int familyId;
 }

@@ -35,11 +35,12 @@ public class GlobalExceptionHandler {
     public ResBody<DuplicateKeyException> duplicateKeyExceptionHandler(HttpServletRequest req, DuplicateKeyException e) {
         log.debug("Message: " + e.getMessage());
         log.debug("Cause: " + e.getCause());
-        return ResBody.error(50002, "id重复");
+        return ResBody.error(new BizException(ExceptionsEnum.INVALID_ID));
     }
 
     @ExceptionHandler(value = Exception.class)
     public ResBody<Exception> exceptionHandler(HttpServletRequest req, Exception e) {
+        e.printStackTrace();
         log.error("Message: " + e.getMessage());
         log.error("Cause: " + e.getCause());
         return ResBody.error(50002, "内部异常");

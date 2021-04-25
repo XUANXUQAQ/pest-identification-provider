@@ -1,31 +1,21 @@
-package com.rjgc.entity;
+package com.rjgc.Vo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.rjgc.entity.Species;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
  * @author zhaoyunjie
  * @date 2021-04-09 16:36
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SpeciesVo {
-    private int id;
-
-    @JSONField(name = "name")
-    private String name;
-
-    @JSONField(name = "latin")
-    private String latin;
-
-    @JSONField(name = "plant")
-    private String plant;
-
-    @JSONField(name = "area")
-    private String area;
+public class SpeciesVo extends Species {
 
     @JSONField(name = "genus_name")
     private String genusName;

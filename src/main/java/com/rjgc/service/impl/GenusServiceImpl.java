@@ -1,8 +1,5 @@
 package com.rjgc.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.entity.Genus;
 import com.rjgc.mapper.FamilyGenusMapper;
@@ -14,8 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhaoyunjie
@@ -33,35 +28,6 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
     @Autowired
     @Qualifier("familyGenusServiceImpl")
     private FamilyGenusService familyGenusService;
-
-    @Override
-    public Map<String, Object> selectAllGenuses(int pageNum, int pageSize) {
-        QueryWrapper<Genus> genusQueryWrapper = new QueryWrapper<>();
-        genusQueryWrapper.orderByAsc("id");
-        return getListPagesMap(pageNum, pageSize, genusQueryWrapper);
-    }
-
-    @Override
-    public List<Genus> selectGenusesById(int id) {
-        QueryWrapper<Genus> genusQueryWrapper = new QueryWrapper<>();
-        return genusMapper.selectList(genusQueryWrapper);
-    }
-
-    @Override
-    public Map<String, Object> selectGenusesByName(int pageNum, int pageSize, String name) {
-        QueryWrapper<Genus> wrapper = new QueryWrapper<>();
-        wrapper.like("name", name);
-        wrapper.orderByAsc("id");
-        return getListPagesMap(pageNum, pageSize, wrapper);
-    }
-
-    private Map<String, Object> getListPagesMap(int pageNum, int pageSize, QueryWrapper<Genus> wrapper) {
-        IPage<Genus> page = this.page(new Page<>(pageNum, pageSize), wrapper);
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("data", page.getRecords());
-        map.put("pages", page.getPages());
-        return map;
-    }
 
     @Override
     public int insertGenus(int familyId, Genus genus) {

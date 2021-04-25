@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,10 +32,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
     }
 
     @Override
-    public List<Orders> selectOrdersById(int id) {
+    public Map<String, Object> selectOrdersById(int id) {
         QueryWrapper<Orders> wrapper = new QueryWrapper<>();
         wrapper.eq("id", id);
-        return orderMapper.selectList(wrapper);
+        return getListPagesMap(1, 1, wrapper);
     }
 
     @Override

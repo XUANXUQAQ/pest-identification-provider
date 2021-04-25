@@ -2,8 +2,8 @@ package com.rjgc.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.rjgc.Vo.SpeciesVo;
 import com.rjgc.entity.Species;
-import com.rjgc.entity.SpeciesVo;
 import com.rjgc.mapper.SpeciesMapper;
 import com.rjgc.mapper.SpeciesVoMapper;
 import com.rjgc.service.SpeciesVoService;
@@ -28,13 +28,16 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     private SpeciesMapper speciesMapper;
 
     @Override
-    public List<SpeciesVo> selectSpeciesVoById(int id) {
-        return speciesVoMapper.selectSpeciesById(id);
+    public Map<String, Object> selectSpeciesVoById(int id) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", speciesVoMapper.selectSpeciesById(id));
+        map.put("pages", 1);
+        return map;
     }
 
     @Override
     public Map<String, Object> selectAllSpeciesVo(int pageNum, int pageSize) {
-        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies(pageNum - 1, pageSize);
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies((pageNum - 1) * pageSize, pageSize);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         Integer count = speciesMapper.selectCount(wrapper);
         HashMap<String, Object> map = new HashMap<>();
@@ -44,13 +47,16 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     }
 
     @Override
-    public List<SpeciesVo> selectSpeciesVoByCode(String code) {
-        return speciesVoMapper.selectSpeciesByCode(code);
+    public Map<String, Object> selectSpeciesVoByCode(String code) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("data", speciesVoMapper.selectSpeciesByCode(code));
+        map.put("pages", 1);
+        return map;
     }
 
     @Override
     public Map<String, Object> selectSpeciesVoByName(int pageNum, int pageSize, String name) {
-        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByName(name);
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByName((pageNum - 1) * pageSize, pageSize, name);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
         Integer count = speciesMapper.selectCount(wrapper);

@@ -1,11 +1,11 @@
 package com.rjgc.controller;
 
-import com.rjgc.entity.OrderFamily;
+import com.rjgc.Vo.OrderFamilyVo;
 import com.rjgc.entity.Orders;
 import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
-import com.rjgc.service.OrderFamilyService;
+import com.rjgc.service.OrderFamilyVoService;
 import com.rjgc.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +24,8 @@ import java.util.Map;
 public class OrderController {
 
     @Autowired
-    @Qualifier("orderFamilyServiceImpl")
-    private OrderFamilyService orderFamilyService;
+    @Qualifier("orderFamilyVoServiceImpl")
+    private OrderFamilyVoService orderFamilyService;
 
 
     @Autowired
@@ -46,7 +46,7 @@ public class OrderController {
 
     @GetMapping
     @ApiOperation("根据id查询目")
-    public ResBody<List<Orders>> selectOrderById(@RequestParam int id) {
+    public ResBody<Map<String, Object>> selectOrderById(@RequestParam int id) {
         return ResBody.success(orderService.selectOrdersById(id));
     }
 
@@ -64,7 +64,7 @@ public class OrderController {
     @ApiOperation("根据id删除目")
     public ResBody<Integer> deleteOrderById(@RequestParam int id) {
         //检查是否仍有属关联于该目
-        List<OrderFamily> orderFamilies = orderFamilyService.selectByOrderId(id);
+        List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(id);
         if (orderFamilies.isEmpty()) {
             if (orderService.deleteOrderById(id) == 1) {
                 return ResBody.success();
@@ -81,7 +81,7 @@ public class OrderController {
     @ApiOperation("更新目")
     public ResBody<Integer> updateOrder(@RequestBody Orders newOrders) {
         //检查是否仍有属关联于该目
-        List<OrderFamily> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
+        List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
         if (orderFamilies.isEmpty()) {
             if (orderService.updateOrder(newOrders) == 1) {
                 return ResBody.success();

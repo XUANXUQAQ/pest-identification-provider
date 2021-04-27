@@ -3,6 +3,7 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.Vo.GenusVo;
+import com.rjgc.configs.DatabaseIdConfig;
 import com.rjgc.entity.Genus;
 import com.rjgc.mapper.GenusMapper;
 import com.rjgc.mapper.GenusVoMapper;
@@ -23,9 +24,16 @@ public class GenusVoServiceImpl extends ServiceImpl<GenusVoMapper, GenusVo> impl
     @Autowired
     private GenusMapper genusMapper;
 
+    @Autowired
+    private DatabaseIdConfig databaseIdConfig;
+
     @Override
     public Map<String, Object> selectAllGenuses(int pageNum, int pageSize) {
-        List<GenusVo> genusVos = genusVoMapper.selectAllGenus((pageNum - 1) * pageSize, pageSize);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<GenusVo> genusVos = genusVoMapper.selectAllGenus(pageNum, pageSize);
         HashMap<String, Object> map = new HashMap<>();
         QueryWrapper<Genus> wrapper = new QueryWrapper<>();
         Integer count = genusMapper.selectCount(wrapper);
@@ -45,7 +53,11 @@ public class GenusVoServiceImpl extends ServiceImpl<GenusVoMapper, GenusVo> impl
 
     @Override
     public Map<String, Object> selectGenusesByName(int pageNum, int pageSize, String name) {
-        List<GenusVo> genusVos = genusVoMapper.selectGenusByName((pageNum - 1) * pageSize, pageSize, name);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<GenusVo> genusVos = genusVoMapper.selectGenusByName(pageNum, pageSize, name);
         HashMap<String, Object> map = new HashMap<>();
         map.put("data", genusVos);
         QueryWrapper<Genus> wrapper = new QueryWrapper<>();

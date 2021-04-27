@@ -3,6 +3,7 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.Vo.SpeciesVo;
+import com.rjgc.configs.DatabaseIdConfig;
 import com.rjgc.entity.Species;
 import com.rjgc.mapper.SpeciesMapper;
 import com.rjgc.mapper.SpeciesVoMapper;
@@ -27,6 +28,9 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
     @Autowired
     private SpeciesMapper speciesMapper;
 
+    @Autowired
+    private DatabaseIdConfig databaseIdConfig;
+
     @Override
     public Map<String, Object> selectSpeciesVoById(int id) {
         HashMap<String, Object> map = new HashMap<>();
@@ -37,7 +41,11 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
 
     @Override
     public Map<String, Object> selectAllSpeciesVo(int pageNum, int pageSize) {
-        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies((pageNum - 1) * pageSize, pageSize);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectAllSpecies(pageNum, pageSize);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         Integer count = speciesMapper.selectCount(wrapper);
         HashMap<String, Object> map = new HashMap<>();
@@ -56,7 +64,11 @@ public class SpeciesVoServiceImpl extends ServiceImpl<SpeciesVoMapper, SpeciesVo
 
     @Override
     public Map<String, Object> selectSpeciesVoByName(int pageNum, int pageSize, String name) {
-        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByName((pageNum - 1) * pageSize, pageSize, name);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<SpeciesVo> speciesVos = speciesVoMapper.selectSpeciesByName(pageNum, pageSize, name);
         QueryWrapper<Species> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);
         Integer count = speciesMapper.selectCount(wrapper);

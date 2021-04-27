@@ -34,14 +34,6 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
 
     @Override
     public int deleteGenusById(int id) {
-     /*   HashMap<String, Object> map = new HashMap<>();
-        map.put("genus_id", id);
-        if (familyGenusMapper.deleteByMap(map) == 1) {
-            if ( == 1) {
-                return 1;
-            }
-        }
-        return 0;*/
         return genusMapper.deleteById(id);
     }
 

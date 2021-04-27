@@ -43,6 +43,6 @@ public class GlobalExceptionHandler {
         e.printStackTrace();
         log.error("Message: " + e.getMessage());
         log.error("Cause: " + e.getCause());
-        return ResBody.error(50002, "内部异常");
+        return ResBody.error(new BizException(ExceptionsEnum.DATABASE_FAILED));
     }
 }

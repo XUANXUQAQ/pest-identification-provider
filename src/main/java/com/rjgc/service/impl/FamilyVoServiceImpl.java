@@ -3,6 +3,7 @@ package com.rjgc.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rjgc.Vo.FamilyVo;
+import com.rjgc.configs.DatabaseIdConfig;
 import com.rjgc.entity.Family;
 import com.rjgc.mapper.FamilyMapper;
 import com.rjgc.mapper.FamilyVoMapper;
@@ -23,9 +24,16 @@ public class FamilyVoServiceImpl extends ServiceImpl<FamilyVoMapper, FamilyVo> i
     @Autowired
     private FamilyMapper familyMapper;
 
+    @Autowired
+    private DatabaseIdConfig databaseIdConfig;
+
     @Override
     public Map<String, Object> selectAllFamilies(int pageNum, int pageSize) {
-        List<FamilyVo> familyVos = familyVoMapper.selectAllFamilies((pageNum - 1) * pageSize, pageSize);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<FamilyVo> familyVos = familyVoMapper.selectAllFamilies(pageNum, pageSize);
         HashMap<String, Object> map = new HashMap<>();
         QueryWrapper<Family> wrapper = new QueryWrapper<>();
         Integer count = familyMapper.selectCount(wrapper);
@@ -45,7 +53,11 @@ public class FamilyVoServiceImpl extends ServiceImpl<FamilyVoMapper, FamilyVo> i
 
     @Override
     public Map<String, Object> selectFamiliesByName(int pageNum, int pageSize, String name) {
-        List<FamilyVo> familyVos = familyVoMapper.selectFamilyByName((pageNum - 1) * pageSize, pageSize, name);
+        pageNum = (pageNum - 1) * pageSize + 1;
+        if (databaseIdConfig.isIdStartFromZero()) {
+            pageNum--;
+        }
+        List<FamilyVo> familyVos = familyVoMapper.selectFamilyByName(pageNum, pageSize, name);
         HashMap<String, Object> map = new HashMap<>();
         QueryWrapper<Family> wrapper = new QueryWrapper<>();
         wrapper.like("name", name);

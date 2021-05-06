@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author zhaoyunjie
@@ -34,6 +35,8 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
     private final UserService userService;
 
+    private final Pattern speciesPattern = Pattern.compile("/species/.+$");
+
     public TokenAuthenticationFilter(AuthenticationManager authManager, JwtTokenUtils jwtTokenUtil, UserService userService) {
         super(authManager);
         this.jwtTokenUtil = jwtTokenUtil;
@@ -42,6 +45,12 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        String requestURI = request.getRequestURI().toLowerCase();
+        String method = request.getMethod();
+        if (speciesPattern.matcher(requestURI).matches() && "get".equalsIgnoreCase(method)) {
+            chain.doFilter(request, response);
+            return;
+        }
         UsernamePasswordAuthenticationToken authentication;
         try {
             authentication = getAuthentication(request.getHeader("token"));

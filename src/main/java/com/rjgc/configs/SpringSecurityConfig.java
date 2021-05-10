@@ -63,6 +63,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/species/*").permitAll()
+                .antMatchers("/imgFake").permitAll()
                 .anyRequest().hasRole("admin");
         if (csrfProperties.getCsrfDisabled()) {
             http.csrf().disable();

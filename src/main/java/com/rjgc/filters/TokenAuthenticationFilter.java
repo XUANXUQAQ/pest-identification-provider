@@ -47,7 +47,7 @@ public class TokenAuthenticationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String requestURI = request.getRequestURI().toLowerCase();
         String method = request.getMethod();
-        if (speciesPattern.matcher(requestURI).matches() && "get".equalsIgnoreCase(method)) {
+        if (speciesPattern.matcher(requestURI).matches() && "get".equalsIgnoreCase(method) || requestURI.equalsIgnoreCase("/imgfake")) {
             chain.doFilter(request, response);
             return;
         }

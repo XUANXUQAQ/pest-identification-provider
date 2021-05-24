@@ -1,5 +1,6 @@
 package com.rjgc.utils;
 
+import com.rjgc.configs.cas.MinConcurrentLatency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,9 @@ public class CASUtils {
 
     @Autowired
     private DBUtils dbUtils;
+
+    @Autowired
+    private MinConcurrentLatency minConcurrentLatency;
 
     public Timestamp getUpdateTime(String tableName, int id) {
         try (PreparedStatement preparedStatement = dbUtils.getPrepareStatement("SELECT update_time from " + tableName + " where id=" + id)) {
@@ -36,11 +40,10 @@ public class CASUtils {
 
     public boolean compareAndSet(Timestamp timestamp, String tableName, int id) {
         try {
-            Thread.sleep(200);
+            Thread.sleep(minConcurrentLatency.getLatency());
         } catch (InterruptedException ignored) {
         }
         Timestamp updateTime = getUpdateTime(tableName, id);
-        System.out.println("input time: " + timestamp + " database time: " + updateTime);
         if (timestamp.equals(updateTime)) {
             setUpdateTime(tableName, id);
             return true;

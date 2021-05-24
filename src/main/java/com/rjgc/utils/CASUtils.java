@@ -35,7 +35,12 @@ public class CASUtils {
     }
 
     public boolean compareAndSet(Timestamp timestamp, String tableName, int id) {
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException ignored) {
+        }
         Timestamp updateTime = getUpdateTime(tableName, id);
+        System.out.println("input time: " + timestamp + " database time: " + updateTime);
         if (timestamp.equals(updateTime)) {
             setUpdateTime(tableName, id);
             return true;

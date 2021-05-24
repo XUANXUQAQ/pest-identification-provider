@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 public class CustomMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
-        setFieldValByName("updateTime" , Timestamp.valueOf(LocalDateTime.now()), metaObject);
+        setFieldValByName("updateTime", Timestamp.valueOf(LocalDateTime.now()), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        setFieldValByName("updateTime" , Timestamp.valueOf(LocalDateTime.now()) , metaObject);
+        setFieldValByName("updateTime", Timestamp.valueOf(LocalDateTime.now()), metaObject);
     }
 }

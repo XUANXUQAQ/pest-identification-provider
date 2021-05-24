@@ -29,7 +29,7 @@ public class GenusServiceImpl extends ServiceImpl<GenusMapper, Genus> implements
 
     @Override
     public int insertGenus(int familyId, Genus genus) {
-       return genusMapper.insert(genus);
+        return genusMapper.insert(genus);
     }
 
     @Override

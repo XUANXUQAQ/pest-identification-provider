@@ -43,7 +43,7 @@ public class SwaggerConfig {
                 .globalOperationParameters(pars);
     }
 
-    private ApiInfo apiInfo(){
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title(swaggerProperties.getApplicationName())
                 .description(swaggerProperties.getApplicationDescription())

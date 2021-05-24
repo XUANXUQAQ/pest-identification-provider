@@ -14,10 +14,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="Hibernate" />
-        <datasource-mapping>
-          <factory-entry name="entityManagerFactory" value="fb262dfa-72fe-49d7-8e24-23ad80e882b1" />
-          <factory-entry name="pest-identification" value="6c911583-b5c3-42c5-b4f3-8ad69cf980ff" />
-        </datasource-mapping>
+        <datasource-mapping />
         <naming-strategy-map />
       </configuration>
     </facet>

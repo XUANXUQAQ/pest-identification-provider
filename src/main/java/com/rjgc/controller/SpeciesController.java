@@ -7,6 +7,7 @@ import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.GenusVoService;
 import com.rjgc.service.SpeciesService;
 import com.rjgc.service.SpeciesVoService;
+import com.rjgc.utils.CASUtils;
 import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +41,9 @@ public class SpeciesController {
 
     @Autowired
     private DBUtils dbUtils;
+
+    @Autowired
+    private CASUtils casUtils;
 
     @GetMapping
     @ApiOperation("根据id查询种")
@@ -104,11 +109,16 @@ public class SpeciesController {
      */
     @DeleteMapping
     @ApiOperation("根据id删除种")
-    public ResBody<Integer> deleteSpeciesById(@RequestParam int id) {
-        if (speciesService.deleteSpeciesById(id) == 1) {
-            return ResBody.success();
+    public ResBody<Integer> deleteSpecieSsById(@RequestParam int id) {
+        Timestamp time = casUtils.getUpdateTime("species", id);
+        if (casUtils.compareAndSet(time, "species", id)) {
+            if (speciesService.deleteSpeciesById(id) == 1) {
+                return ResBody.success();
+            } else {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
         } else {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
     }
 
@@ -121,10 +131,15 @@ public class SpeciesController {
     @PutMapping
     @ApiOperation("更新种")
     public ResBody<Integer> updateSpecies(@RequestBody Species species) {
-        if (speciesService.updateSpecies(species) == 1) {
-            return ResBody.success();
+        Timestamp time = casUtils.getUpdateTime("species", species.getId());
+        if (casUtils.compareAndSet(time, "species", species.getId())) {
+            if (speciesService.updateSpecies(species) == 1) {
+                return ResBody.success();
+            } else {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
         } else {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
     }
 }

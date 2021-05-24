@@ -8,6 +8,7 @@ import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.*;
+import com.rjgc.utils.CASUtils;
 import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +52,9 @@ public class FamilyController {
 
     @Autowired
     private DBUtils dbUtils;
+
+    @Autowired
+    private CASUtils casUtils;
 
     /**
      * 通过id查询科
@@ -123,21 +128,26 @@ public class FamilyController {
     @ApiOperation("更新科信息")
     @Transactional
     public ResBody<Integer> updateFamily(@RequestParam int orderId, @RequestBody Family newFamily) {
-        // 检查目id是否有效
-        List<Orders> list = (List<Orders>) orderService.selectOrdersById(orderId).get("data");
-        if (list.isEmpty()) {
-            throw new BizException(ExceptionsEnum.INVALID_ID);
+        Timestamp time = casUtils.getUpdateTime("family", newFamily.getId());
+        if (casUtils.compareAndSet(time, "family", newFamily.getId())) {
+            // 检查目id是否有效
+            List<Orders> list = (List<Orders>) orderService.selectOrdersById(orderId).get("data");
+            if (list.isEmpty()) {
+                throw new BizException(ExceptionsEnum.INVALID_ID);
+            }
+            OrderFamily orderFamily = new OrderFamily();
+            orderFamily.setOrderId(orderId);
+            orderFamily.setFamilyId(newFamily.getId());
+            if (familyService.updateFamily(newFamily) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            if (orderFamilyService.updateByFamilyId(orderId, newFamily.getId()) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
-        OrderFamily orderFamily = new OrderFamily();
-        orderFamily.setOrderId(orderId);
-        orderFamily.setFamilyId(newFamily.getId());
-        if (familyService.updateFamily(newFamily) != 1) {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-        }
-        if (orderFamilyService.updateByFamilyId(orderId, newFamily.getId()) != 1) {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-        }
-        return ResBody.success();
     }
 
     /**
@@ -150,19 +160,24 @@ public class FamilyController {
     @ApiOperation("根据id删除科")
     @Transactional
     public ResBody<Integer> deleteFamilyById(@RequestParam int id) {
-        //检查是否仍有属关联于该科
-        List<FamilyGenusVo> familyGenus = familyGenusVoService.selectByFamilyId(id);
-        if (familyGenus.isEmpty()) {
-            if (orderFamilyService.deleteByFamilyId(id) != 1) {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        Timestamp time = casUtils.getUpdateTime("family", id);
+        if (casUtils.compareAndSet(time, "family", id)) {
+            //检查是否仍有属关联于该科
+            List<FamilyGenusVo> familyGenus = familyGenusVoService.selectByFamilyId(id);
+            if (familyGenus.isEmpty()) {
+                if (orderFamilyService.deleteByFamilyId(id) != 1) {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
+                if (familyService.deleteFamilyById(id) != 1) {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
+            } else {
+                //id仍被使用
+                throw new BizException(ExceptionsEnum.IN_USE);
             }
-            if (familyService.deleteFamilyById(id) != 1) {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-            }
+            return ResBody.success();
         } else {
-            //id仍被使用
-            throw new BizException(ExceptionsEnum.IN_USE);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
-        return ResBody.success();
     }
 }

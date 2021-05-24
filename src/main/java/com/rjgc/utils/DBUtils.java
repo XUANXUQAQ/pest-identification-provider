@@ -32,6 +32,12 @@ public class DBUtils {
         return false;
     }
 
+    public PreparedStatement getPrepareStatement(String sql) throws SQLException {
+        log.info(PREFIX_LOG + "执行sql:" + sql);
+        SqlSession session = getSqlSession();
+        return session.getConnection().prepareStatement(sql);
+    }
+
     /**
      * 获取sqlSession
      *

@@ -1,10 +1,14 @@
 package com.rjgc.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.sql.Timestamp;
 
 /**
  * @author zhaoyunjie
@@ -21,4 +25,8 @@ public class OrderFamily {
     @TableId
     @JSONField(name = "family_id")
     private int familyId;
+
+    @JSONField(name = "update_time")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Timestamp updateTime;
 }

@@ -8,6 +8,7 @@ import com.rjgc.exceptions.BizException;
 import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.*;
+import com.rjgc.utils.CASUtils;
 import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +63,9 @@ public class GenusController {
 
     @Autowired
     private DBUtils dbUtils;
+
+    @Autowired
+    private CASUtils casUtils;
 
     /**
      * 查询所有属
@@ -133,18 +138,23 @@ public class GenusController {
     @ApiOperation("删除属")
     @Transactional
     public ResBody<Integer> deleteGenusById(@RequestParam int id) {
-        //检查是否仍有种依赖于该属
-        List<SpeciesVo> list = (List<SpeciesVo>) speciesVoService.selectSpeciesVoByGenusId(id).get("data");
-        if (list.isEmpty()) {
-            if (genusService.deleteGenusById(id) != 1) {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        Timestamp time = casUtils.getUpdateTime("genus", id);
+        if (casUtils.compareAndSet(time, "genus", id)) {
+            //检查是否仍有种依赖于该属
+            List<SpeciesVo> list = (List<SpeciesVo>) speciesVoService.selectSpeciesVoByGenusId(id).get("data");
+            if (list.isEmpty()) {
+                if (genusService.deleteGenusById(id) != 1) {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
+                if (familyGenusService.deleteByGenusId(id) != 1) {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
+                return ResBody.success();
+            } else {
+                throw new BizException(ExceptionsEnum.IN_USE);
             }
-            if (familyGenusService.deleteByGenusId(id) != 1) {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-            }
-            return ResBody.success();
         } else {
-            throw new BizException(ExceptionsEnum.IN_USE);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
     }
 
@@ -158,22 +168,27 @@ public class GenusController {
     @ApiOperation("更新属")
     @Transactional
     public ResBody<Integer> updateGenus(@RequestParam int familyId, @RequestBody Genus newGenus) {
-        // 检查目id和科id是否有效
-        List<OrderFamilyVo> families = orderFamilyVoService.selectByFamilyId(familyId);
-        if (families.isEmpty()) {
-            throw new BizException(ExceptionsEnum.INVALID_ID);
-        }
-        OrderFamilyVo orderFamily = families.get(0);
-        if (genusService.updateGenus(newGenus) != 1) {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-        }
-        if (familyGenusService.updateByGenusId(familyId, newGenus.getId()) != 1) {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
-        }
-        if (orderFamilyService.updateByFamilyId(orderFamily.getOrderId(), familyId) != 1) {
-            throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+        Timestamp time = casUtils.getUpdateTime("genus", newGenus.getId());
+        if (casUtils.compareAndSet(time, "genus", newGenus.getId())) {
+            // 检查目id和科id是否有效
+            List<OrderFamilyVo> families = orderFamilyVoService.selectByFamilyId(familyId);
+            if (families.isEmpty()) {
+                throw new BizException(ExceptionsEnum.INVALID_ID);
+            }
+            OrderFamilyVo orderFamily = families.get(0);
+            if (genusService.updateGenus(newGenus) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            if (familyGenusService.updateByGenusId(familyId, newGenus.getId()) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+            }
+            if (orderFamilyService.updateByFamilyId(orderFamily.getOrderId(), familyId) != 1) {
+                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
 
+            }
+            return ResBody.success();
+        } else {
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
-        return ResBody.success();
     }
 }

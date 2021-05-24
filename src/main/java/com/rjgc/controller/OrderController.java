@@ -7,6 +7,7 @@ import com.rjgc.exceptions.ExceptionsEnum;
 import com.rjgc.exceptions.ResBody;
 import com.rjgc.service.OrderFamilyVoService;
 import com.rjgc.service.OrderService;
+import com.rjgc.utils.CASUtils;
 import com.rjgc.utils.DBUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,9 @@ public class OrderController {
 
     @Autowired
     private DBUtils dbUtils;
+
+    @Autowired
+    private CASUtils casUtils;
 
 
     @GetMapping("all")
@@ -73,34 +78,44 @@ public class OrderController {
     @DeleteMapping
     @ApiOperation("根据id删除目")
     public ResBody<Integer> deleteOrderById(@RequestParam int id) {
-        //检查是否仍有属关联于该目
-        List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(id);
-        if (orderFamilies.isEmpty()) {
-            if (orderService.deleteOrderById(id) == 1) {
-                return ResBody.success();
+        Timestamp time = casUtils.getUpdateTime("orders", id);
+        if (casUtils.compareAndSet(time, "orders", id)) {
+            //检查是否仍有属关联于该目
+            List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(id);
+            if (orderFamilies.isEmpty()) {
+                if (orderService.deleteOrderById(id) == 1) {
+                    return ResBody.success();
+                } else {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
             } else {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                //id仍被使用
+                throw new BizException(ExceptionsEnum.IN_USE);
             }
         } else {
-            //id仍被使用
-            throw new BizException(ExceptionsEnum.IN_USE);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
     }
 
     @PutMapping
     @ApiOperation("更新目")
     public ResBody<Integer> updateOrder(@RequestBody Orders newOrders) {
-        //检查是否仍有科关联于该目
-        List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
-        if (orderFamilies.isEmpty()) {
-            if (orderService.updateOrder(newOrders) == 1) {
-                return ResBody.success();
+        Timestamp time = casUtils.getUpdateTime("orders", newOrders.getId());
+        if (casUtils.compareAndSet(time, "orders", newOrders.getId())) {
+            //检查是否仍有科关联于该目
+            List<OrderFamilyVo> orderFamilies = orderFamilyService.selectByOrderId(newOrders.getId());
+            if (orderFamilies.isEmpty()) {
+                if (orderService.updateOrder(newOrders) == 1) {
+                    return ResBody.success();
+                } else {
+                    throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                }
             } else {
-                throw new BizException(ExceptionsEnum.DATABASE_FAILED);
+                //id仍被使用
+                throw new BizException(ExceptionsEnum.IN_USE);
             }
         } else {
-            //id仍被使用
-            throw new BizException(ExceptionsEnum.IN_USE);
+            throw new BizException(ExceptionsEnum.OTHER_USER_IN_USE);
         }
     }
 }

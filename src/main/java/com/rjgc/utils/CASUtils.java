@@ -44,7 +44,7 @@ public class CASUtils {
         } catch (InterruptedException ignored) {
         }
         Timestamp updateTime = getUpdateTime(tableName, id);
-        if (timestamp.equals(updateTime)) {
+        if (timestamp == null || timestamp.equals(updateTime)) {
             setUpdateTime(tableName, id);
             return true;
         }

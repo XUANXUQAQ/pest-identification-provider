@@ -26,6 +26,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = NullPointerException.class)
     public ResBody<NullPointerException> nullPointerExceptionHandler(HttpServletRequest req, NullPointerException e) {
+        e.printStackTrace();
         log.debug("Message: " + e.getMessage());
         log.debug("Cause: " + e.getCause());
         return ResBody.error(50001, "空指针异常");

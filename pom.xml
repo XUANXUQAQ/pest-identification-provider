@@ -7,13 +7,13 @@
         <groupId>com.rjgc</groupId>
         <artifactId>pest-identification-api</artifactId>
         <version>1.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pest-identification-api/pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>pest-identification</artifactId>
+    <artifactId>pest-identification-provider</artifactId>
     <version>0.0.1</version>
-    <name>pest-identification</name>
-    <description>Pest-identification</description>
+    <name>pest-identification-provider</name>
+    <description>Pest-identification-provider</description>
     <properties>
         <java.version>1.8</java.version>
         <skipTests>true</skipTests>
@@ -22,7 +22,7 @@
     <dependencies>
         <dependency>
             <groupId>com.rjgc</groupId>
-            <artifactId>pest-identification-api</artifactId>
+            <artifactId>pest-identification-entity</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
@@ -134,7 +134,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.rjgc.PestIdentificationApplication</mainClass>
+                    <mainClass>com.rjgc.PestIdentificationProvider</mainClass>
                 </configuration>
                 <executions>
                     <execution>

@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan("com.rjgc.mapper")
 @EnableTransactionManagement
 @EnableDiscoveryClient
-public class PestIdentificationApplication {
+public class PestIdentificationProvider {
 
     public static void main(String[] args) {
-        SpringApplication.run(PestIdentificationApplication.class, args);
+        SpringApplication.run(PestIdentificationProvider.class, args);
     }
 
 }

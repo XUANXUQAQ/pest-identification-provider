@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2021-04-09 23:04
  */
 @Service
-public class CustomUserDetainsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     @Qualifier("userServiceImpl")

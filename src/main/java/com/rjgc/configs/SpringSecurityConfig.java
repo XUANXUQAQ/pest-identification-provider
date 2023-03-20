@@ -3,7 +3,7 @@ package com.rjgc.configs;
 import com.rjgc.filters.CustomCorsFilter;
 import com.rjgc.filters.TokenAuthenticationFilter;
 import com.rjgc.filters.TokenLoginFilter;
-import com.rjgc.service.CustomUserDetainsService;
+import com.rjgc.service.CustomUserDetailsService;
 import com.rjgc.service.UserService;
 import com.rjgc.utils.JwtTokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import org.springframework.security.web.header.HeaderWriterFilter;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomUserDetainsService userDetainsService;
+    private CustomUserDetailsService userDetainsService;
 
     @Autowired
     private CsrfProperties csrfProperties;
